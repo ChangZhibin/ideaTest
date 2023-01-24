@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style type="text/css">
+        table {
+            border-collapse: collapse;
+            margin: 0px auto 0px auto;
+            width: 70%;
+        }
+
+        table th, td {
+            border: 1px solid black;
+            text-align: center;
+        }
+
+        div {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 登录信息部分 -->
+<div>
+
+    <span th:if="${session.loginInfo.getPermission() == 0}">管理员：<span th:text="${session.loginInfo.getName()}">XXX</span>您好</span>
+    <span>欢迎进入您的商品管理</span>
+
+</div>
+<div>
+    <a th:href="@{/auth?method=logout}">退出交易系统</a>
+</div>
+
+<!-- 数据显示部分 -->
+<table>
+    <thead>
+    <tr>
+        <th>商品id</th>
+        <th>商品名称</th>
+        <th>商品种类</th>
+        <th>商品价格</th>
+        <th>商品数量</th>
+        <th>商品详情</th>
+        <th>删除操作</th>
+    </tr>
+    </thead>
+    <tbody th:if="${#lists.isEmpty(myGoodsList)}">
+    <tr>
+        <td colspan="7">您没有要管理的货物</td>
+    </tr>
+    </tbody>
+    <tbody th:if="${not #lists.isEmpty(myGoodsList)}">
+    <tr th:each="myGoods : ${myGoodsList}">
+        <td>
+            <span th:text="${myGoods.getGoodsId}">商品id</span>
+        </td>
+
+        <td>
+            <span th:text="${myGoods.getGoodsName}">商品名称</span>
+        </td>
+        <td>
+            <span th:text="${myGoods.getGoodsVariety}">商品品类</span>
+        </td>
+        <td>
+            <span th:text="${myGoods.getPrice}">商品价格</span>
+        </td>
+        <td>
+            <span th:text="${myGoods.getCount}">商品数量</span>
+        </td>
+        <td>
+            <span th:text="${myGoods.getDetails}">商品详情</span>
+        </td>
+        <td>
+            <a th:href="@{/work(method='deleteGoodsBySellerId',goodsId=${myGoods.getGoodsId},selectSellerId=${myGoods.getSellerId})}">删除</a>
+        </td>
+
+
+    </tr>
+    </tbody>
+</table>
+
+<div>
+    <a th:href="@{/add}">添加农副产品</a>
+</div>
+
+<!--<div style="margin: 0 auto 0 auto;width: 60%;" th:if="${memorials.memorialsStatus != 2}">-->
+<!--    <form th:action="@{/work}" method="post">-->
+
+<!--        <input type="hidden" name="method" value="feedBack" />-->
+<!--        <input type="hidden" name="memorialsId" th:value="${memorials.memorialsId}"/>-->
+
+<!--        <textarea name="feedbackContent" style="width: 500px;height: 200px;"></textarea>-->
+
+<!--        <button type="submit">御批</button>-->
+
+<!--    </form>-->
+<!--</div>-->
+
+<a th:href="@{/work?method=showGoodsList}">返回列表</a>
+
+</body>
+</html>

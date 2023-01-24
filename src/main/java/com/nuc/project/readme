@@ -1,0 +1,38 @@
+此项目没有采用任何框架技术
+
+
+
+关于数据库操作dao方面：
+
+    dao包里： 首先是一个baseDao基类， 封装了dao需要用到的基本的方法，只需自己将所用到的dao继承就行
+
+    baseDao里使用的是DBUtils工具包
+    // DBUtils 工具包提供的数据库操作对象
+    private QueryRunner runner = new QueryRunner();
+    QueryRunner是封装了操作数据库的方法，直接调用就行
+    补充： 操作数据库的步骤：   1.加载数据库驱动： Class.forName("")
+                              2.通过驱动管理器获得与数据库连接的连接对象connection
+                              3.通过connect对象获取封装了sql的preparedStatement对象，放入预编译sql语句
+                              4.执行sql语句： 3的对象.executeQuery();
+
+filter方面：
+    首先得继承filter类，需要重写init初始化，destroy销毁，doFilter这三个方法
+    其中主要逻辑在doFilter里面： 如果条件成功，就放行，filterChain.doFilter(request, servletResponse);
+    可以在filter里面进行事务的配置
+        事务：
+            1、获取数据库连接 connection = JDBCUtils.getConnection();
+
+            重要操作：关闭自动提交功能 connection.setAutoCommit(false);
+
+            2、核心操作filterChain.doFilter(servletRequest, servletResponse);
+
+            3、提交事务connection.commit();
+
+            4、回滚事务connection.rollback();（如果是出现异常，需要进行回滚事务）
+
+    然后需要在web.xml里面进行配置
+
+
+
+
+

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style type="text/css">
+        table {
+            border-collapse: collapse;
+            margin: 0px auto 0px auto;
+            width: 70%;
+        }
+
+        table th, td {
+            border: 1px solid black;
+            text-align: center;
+        }
+
+        div {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 登录信息部分 -->
+<div>
+
+    <span th:if="${session.loginInfo.getPermission() == 0}">管理员：<span th:text="${session.loginInfo.getName()}">XXX</span>您好</span>
+    <span>欢迎进入所用用户名单</span>
+
+</div>
+<div>
+    <a th:href="@{/auth?method=logout}">退出交易系统</a>
+</div>
+
+<!-- 数据显示部分 -->
+<table>
+    <thead>
+    <tr>
+        <th>用户ID</th>
+        <th>用户姓名</th>
+        <th>用户性别</th>
+        <th>用户电话</th>
+        <th>用户权限</th>
+        <th>删除操作</th>
+        <th>更改权限操作</th>
+    </tr>
+    </thead>
+    <tbody th:if="${#lists.isEmpty(userList)}">
+    <tr>
+        <td colspan="7">当前没有用户</td>
+    </tr>
+    </tbody>
+    <tbody th:if="${not #lists.isEmpty(userList)}">
+    <tr th:each="user : ${userList}">
+        <td>
+            <span th:text="${user.getUserId}">用户id</span>
+        </td>
+        <td>
+            <span th:text="${user.getName}">用户姓名</span>
+        </td>
+        <td>
+            <span th:text="${user.getSex}">用户性别</span>
+        </td>
+        <td>
+            <span th:text="${user.phone}">用户电话</span>
+        </td>
+        <td>
+            <span th:if="${user.getPermission() == 1}">普通用户</span>
+            <span th:if="${user.getPermission() == 0}">管理员</span>
+        </td>
+        <td>
+            <a th:href="@{/auth(method='deleteUserByUserId',userId=${user.getUserId})}">删除</a>
+
+        </td>
+        <td>
+            <a th:href="@{/auth(method='updateState0',userId=${user.getUserId})}" th:if="${user.getPermission() == 1}">设置为管理员</a>
+            <a th:href="@{/auth(method='updateState1',userId=${user.getUserId})}" th:if="${user.getPermission() == 0}">设置为普通用户</a>
+        </td>
+
+    </tr>
+    </tbody>
+</table>
+
+<!--<div style="margin: 0 auto 0 auto;width: 60%;" th:if="${memorials.memorialsStatus != 2}">-->
+<!--    <form th:action="@{/work}" method="post">-->
+
+<!--        <input type="hidden" name="method" value="feedBack" />-->
+<!--        <input type="hidden" name="memorialsId" th:value="${memorials.memorialsId}"/>-->
+
+<!--        <textarea name="feedbackContent" style="width: 500px;height: 200px;"></textarea>-->
+
+<!--        <button type="submit">御批</button>-->
+
+<!--    </form>-->
+<!--</div>-->
+
+<a th:href="@{/work?method=showGoodsList}">返回列表</a>
+
+</body>
+</html>

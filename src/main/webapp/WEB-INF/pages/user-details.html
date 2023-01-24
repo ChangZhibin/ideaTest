@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style type="text/css">
+        table {
+            border-collapse: collapse;
+            margin: 0px auto 0px auto;
+            width: 70%;
+        }
+
+        table th, td {
+            border: 1px solid black;
+            text-align: center;
+        }
+
+        div {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 登录信息部分 -->
+<div>
+    <span th:if="${session.loginInfo.getPermission() == 1}">欢迎进入交易系统</span>
+    <span th:if="${session.loginInfo.getPermission() == 0}">管理员：<span th:text="${session.loginInfo.getName()}">XXX</span>您好</span>
+
+
+</div>
+<div>
+    <a th:href="@{/auth?method=logout}">退出交易系统</a>
+</div>
+
+<table>
+    <tr>
+        <td>您的ID</td>
+        <td th:text="${user.getUserId()}"></td>
+    </tr>
+    <tr>
+        <td>您的姓名</td>
+        <td th:text="${user.getName}"></td>
+    </tr>
+    <tr>
+        <td>您的性别</td>
+        <td th:text="${user.getSex}"></td>
+    </tr>
+    <tr>
+        <td>您的电话</td>
+        <td th:text="${user.getPhone}"></td>
+    </tr>
+<!--    <tr th:if="${memorials.memorialsStatus == 2}">-->
+<!--        <td>批复时间</td>-->
+<!--        <td th:text="${memorials.feedbackTime}"></td>-->
+<!--    </tr>-->
+<!--    <tr th:if="${memorials.memorialsStatus == 2}">-->
+<!--        <td>批复时间</td>-->
+<!--        <td th:text="${memorials.feedbackContent}"></td>-->
+<!--    </tr>-->
+</table>
+
+<!--<div style="margin: 0 auto 0 auto;width: 60%;" th:if="${memorials.memorialsStatus != 2}">-->
+<!--    <form th:action="@{/work}" method="post">-->
+
+<!--        <input type="hidden" name="method" value="feedBack" />-->
+<!--        <input type="hidden" name="memorialsId" th:value="${memorials.memorialsId}"/>-->
+
+<!--        <textarea name="feedbackContent" style="width: 500px;height: 200px;"></textarea>-->
+
+<!--        <button type="submit">御批</button>-->
+
+<!--    </form>-->
+<!--</div>-->
+
+<a th:href="@{/work?method=showGoodsList}">返回列表</a>
+
+</body>
+</html>

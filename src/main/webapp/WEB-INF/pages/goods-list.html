@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en" xml:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style type="text/css">
+        table {
+            border-collapse: collapse;
+            margin: 0px auto 0px auto;
+        }
+
+        table th, td {
+            border: 1px solid black;
+            text-align: center;
+        }
+
+        div {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <h1 align="center">欢迎进入农副产品交易系统！</h1>
+    <!-- 登录信息部分 -->
+    <div>
+        <span th:if="${session.loginInfo.getPermission() == 1}">欢迎进入交易系统</span>
+        <span th:if="${session.loginInfo.getPermission() == 0}">管理员：<span th:text="${session.loginInfo.getName()}">XXX</span>您好</span>
+
+
+    </div>
+    <br>
+
+    <div>
+        <a th:href="@{/auth?method=logout}">退出交易系统</a>
+    </div>
+    <div>
+        <a th:href="@{/auth(method='showUserDetails',userId=${session.loginInfo.getUserId()})}">个人信息</a>
+        <a th:href="@{/auth?method=showAllUser}" th:if="${session.loginInfo.getPermission() == 0}">管理用户(管理员权限)</a>
+    </div>
+
+<!--    搜索部分-->
+    <form th:action="@{/work}" method="post" align="center">
+        <!-- 传递 method 请求参数，目的是为了让当前请求调用 Servlet 中的 方法 -->
+        <input type="hidden" name="method" value="selectGoodsByName" />
+
+
+        搜索商品名称：<input type="text" name="selectName"/>
+                    <button type="submit">搜索</button>
+                                                        <br/>
+<!--        密码：<input type="password" name="loginPassword"><br/>-->
+
+    </form>
+    <form th:action="@{/work}" method="post" align="center">
+        <!-- 传递 method 请求参数，目的是为了让当前请求调用 Servlet 中的 方法 -->
+        <input type="hidden" name="method" value="selectGoodsByVariety" />
+
+
+        搜索商品品类：<input type="text" name="selectVariety"/>
+        <button type="submit">搜索</button>
+        <br/>
+        <!--        密码：<input type="password" name="loginPassword"><br/>-->
+
+    </form>
+
+    <!-- 数据显示部分 -->
+    <table>
+        <thead>
+            <tr>
+                <th>商品id</th>
+                <th>商品名称</th>
+                <th>商品种类</th>
+                <th>商品价格</th>
+                <th>商品数量</th>
+                <th>商品详情</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody th:if="${#lists.isEmpty(goodsList)}">
+            <tr>
+                <td colspan="6">暂时没有商品上架</td>
+            </tr>
+        </tbody>
+        <tbody th:if="${not #lists.isEmpty(goodsList)}">
+            <tr th:each="goods : ${goodsList}">
+                <td>
+                    <span th:text="${goods.getGoodsId}">商品id</span>
+                </td>
+
+                <td>
+                    <span th:text="${goods.getGoodsName}">商品名称</span>
+                </td>
+                <td>
+                    <span th:text="${goods.getGoodsVariety}">商品品类</span>
+                </td>
+                <td>
+                    <span th:text="${goods.getPrice}">商品价格</span>
+                </td>
+                <td>
+                    <span th:text="${goods.getCount}">商品数量</span>
+                </td>
+                <td>
+                    <span th:text="${goods.getDetails}">商品详情</span>
+                </td>
+                <td>
+                    <a th:href="@{/shop(method='buyGoodsToShopping', goodsId=${goods.getGoodsId} ,buyerId=${session.loginInfo.getUserId()})}">添加到购物车</a>
+                </td>
+
+
+            </tr>
+        </tbody>
+    </table>
+    <div>
+        <a th:href="@{/work(method='selectGoodsBySellerId',selectSellerId=${session.loginInfo.getUserId()})}">我的商品管理</a>
+    </div>
+    <br>
+    <div>
+        <a th:href="@{/shop(method='selectUserShoppingList',userId=${session.loginInfo.getUserId()})}">进入我的购物车</a>
+    </div>
+    <div>
+        <a th:href="@{/shop?method=showAllShopping}" th:if="${session.loginInfo.getPermission() == 0}">管理订单(管理员权限)</a>
+    </div>
+
+
+</body>
+</html>

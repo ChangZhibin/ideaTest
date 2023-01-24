@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style type="text/css">
+        table {
+            border-collapse: collapse;
+            margin: 0px auto 0px auto;
+            width: 70%;
+        }
+
+        table th, td {
+            border: 1px solid black;
+            text-align: center;
+        }
+
+        div {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 登录信息部分 -->
+<div>
+
+    <span th:if="${session.loginInfo.getPermission() == 0}">管理员：<span th:text="${session.loginInfo.getName()}">XXX</span>您好</span>
+    <span>欢迎进入您的购物车</span>
+
+</div>
+<div>
+    <a th:href="@{/auth?method=logout}">退出交易系统</a>
+</div>
+
+<!-- 数据显示部分 -->
+<table>
+    <thead>
+    <tr>
+        <th>此订单ID</th>
+        <th>商品id</th>
+        <th>商品名称</th>
+        <th>购买个数</th>
+        <th>购买操作</th>
+        <th>删除操作</th>
+    </tr>
+    </thead>
+    <tbody th:if="${#lists.isEmpty(shoppingList)}">
+    <tr>
+        <td colspan="6">购物车无订单</td>
+    </tr>
+    </tbody>
+    <tbody th:if="${not #lists.isEmpty(shoppingList)}">
+    <tr th:each="shopping : ${shoppingList}">
+        <td>
+            <span th:text="${shopping.getShoppingId}">此订单ID</span>
+        </td>
+        <td>
+            <span th:text="${shopping.getGoodsId}">商品id</span>
+        </td>
+        <td>
+            <span th:text="${shopping.getGoodsName}">商品名称</span>
+        </td>
+        <td>
+            <span th:text="${shopping.getBuyCount}">购买个数</span>
+        </td>
+        <td>
+            <a th:href="@{/shop(method='buyShoppingByShoppingId',shoppingId=${shopping.getShoppingId})}" th:if="${shopping.getState() == 0}">付款</a>
+            <span th:if="${shopping.getState == 1}">已付款</span>
+        </td>
+        <td>
+            <a th:href="@{/shop(method='deleteShoppingByShoppingId',shoppingId=${shopping.getShoppingId})}" th:if="${shopping.getState() == 0}">删除</a>
+            <span th:if="${shopping.getState == 1}">已支付，无法删除</span>
+        </td>
+
+
+    </tr>
+    </tbody>
+</table>
+
+
+<a th:href="@{/work?method=showGoodsList}">返回列表</a>
+
+</body>
+</html>
