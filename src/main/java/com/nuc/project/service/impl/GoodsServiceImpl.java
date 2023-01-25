@@ -43,5 +43,9 @@ public class GoodsServiceImpl implements GoodsService {
          return 1;
     }
 
+    //添加商品
+    public int addGoodsForSelect(){
+        return 0;
+    }
 
 }
